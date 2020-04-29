@@ -1,0 +1,125 @@
+<idea-plugin>
+    <!-- 插件名称，别人在官方插件库搜索你的插件时使用的名称 -->
+    <name>BGA-IDEA-Android</name>
+    <!--
+    插件唯一id，不能和其他插件项目重复，所以推荐使用com.xxx.xxx的格式
+    插件不同版本之间不能更改，若没有指定，则与插件名称相同
+    -->
+    <id>cn.bingoogolapple.idea.android</id>
+    <!-- 作者邮件和主页 -->
+    <vendor email="bingoogolapple@gmail.com" url="http://www.bingoogolapple.cn">bingoogolapple</vendor>
+
+    <!-- 插件的描述，支持 HTML 标签 -->
+    <description><![CDATA[
+        description
+        description
+        description
+        description]]></description>
+
+    <!-- 插件版本变更信息，支持 HTML 标签；将展示在 settings | Plugins 对话框和插件仓库的 Web 页面 -->
+    <change-notes><![CDATA[
+        description
+        description
+        description
+        description]]></change-notes>
+
+    <!--
+    对 IntelliJ IDEA 软件支持本插件版本号，分为 since-build 最低版本 和 until-build 最高版本，两个属性可以任选一或者同时使用
+    since-build <= 支持版本 < until-build
+    http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html
+    -->
+    <idea-version since-build="173.0"/>
+
+    <!-- 插件所依赖的其他插件的 id http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
+    <depends>org.jetbrains.android</depends>
+    <depends>org.jetbrains.plugins.terminal</depends>
+    <depends>org.jetbrains.plugins.gradle</depends>
+    <depends>org.intellij.groovy</depends>
+
+    <!--
+    IntelliJ IDEA 的组件模型是基于 PicoContainer https://www.cnblogs.com/yaoxiaohui/archive/2009/03/08/1406228.html
+    Application 级别的 components 在 IDEA 启动时加载，Project 和 Module 级别的 components 在项目启动时共同加载
+    -->
+    <!-- 在 IDEA 启动时初始化，在 IntelliJ IDEA 程序中只有一个实例存在 -->
+    <application-components>
+        <component>
+            <interface-class>cn.bingoogolapple.idea.android.component.AndroidApplicationComponent</interface-class>
+            <implementation-class>cn.bingoogolapple.idea.android.component.AndroidApplicationComponent</implementation-class>
+        </component>
+    </application-components>
+
+    <!-- IDEA 会为每一个 Project 实例创建 Project 级别的 Component -->
+    <project-components>
+        <component>
+            <interface-class>cn.bingoogolapple.idea.android.component.AndroidProjectComponent</interface-class>
+            <implementation-class>cn.bingoogolapple.idea.android.component.AndroidProjectComponent</implementation-class>
+        </component>
+    </project-components>
+
+    <!-- IDEA 会为已加载的 Project 中的每个 Module 创建 Module 级别的 Component -->
+    <module-components>
+        <component>
+            <interface-class>cn.bingoogolapple.idea.android.component.AndroidModuleComponent</interface-class>
+            <implementation-class>cn.bingoogolapple.idea.android.component.AndroidModuleComponent</implementation-class>
+        </component>
+    </module-components>
+
+    <!-- 插件定义的扩展点，以供其他插件扩展该插件 -->
+    <extensionPoints>
+    </extensionPoints>
+
+    <!-- 声明该插件对 IDEA core 或其他插件的扩展 -->
+    <extensions defaultExtensionNs="com.intellij">
+        <projectService serviceInterface="cn.bingoogolapple.idea.android.service.AndroidProjectService"
+                        serviceImplementation="cn.bingoogolapple.idea.android.service.AndroidProjectServiceImpl"/>
+
+        <applicationConfigurable instance="cn.bingoogolapple.idea.android.persistent.AndroidConfigurable"/>
+        <applicationService serviceInterface="cn.bingoogolapple.idea.android.persistent.AndroidPersistentStateComponent"
+                            serviceImplementation="cn.bingoogolapple.idea.android.persistent.AndroidPersistentStateComponent"/>
+
+        <toolWindow id="Sample Calendar" secondary="true" icon="/toolwindow/plus.png" anchor="right"
+                    factoryClass="cn.bingoogolapple.idea.android.toolwindow.AndroidToolWindowFactory"/>
+    </extensions>
+
+    <!-- 一个 Action 表示 IDEA 菜单里的一个条目或工具栏上的一个按钮 -->
+    <actions>
+        <group id="cn.bingoogolapple.idea.android" text="BGAAndroid">
+            <add-to-group group-id="MainMenu" anchor="last"/>
+        </group>
+
+        <group id="cn.bingoogolapple.idea.android.settings" text="Settings" popup="true">
+            <add-to-group group-id="cn.bingoogolapple.idea.android" anchor="first"/>
+
+            <action id="cn.bingoogolapple.idea.android.action.common.ConnectYeShen"
+                    class="cn.bingoogolapple.idea.android.action.common.ConnectYeShen"/>
+            <action id="cn.bingoogolapple.idea.android.action.common.ConnectMuMu"
+                    class="cn.bingoogolapple.idea.android.action.common.ConnectMuMu"/>
+            <separator/>
+            <action id="cn.bingoogolapple.idea.android.action.common.SettingsHome"
+                    class="cn.bingoogolapple.idea.android.action.common.SettingsHome"/>
+            <action id="cn.bingoogolapple.idea.android.action.common.SettingsWiFi"
+                    class="cn.bingoogolapple.idea.android.action.common.SettingsWiFi"/>
+            <action id="cn.bingoogolapple.idea.android.action.common.SettingsApp"
+                    class="cn.bingoogolapple.idea.android.action.common.SettingsApp"/>
+            <action id="cn.bingoogolapple.idea.android.action.common.SettingsDeveloper"
+                    class="cn.bingoogolapple.idea.android.action.common.SettingsDeveloper"/>
+        </group>
+
+        <group id="cn.bingoogolapple.idea.android.study" text="Study" popup="true">
+            <add-to-group group-id="cn.bingoogolapple.idea.android" anchor="last"/>
+
+            <action id="cn.bingoogolapple.idea.android.action.study.TestDialog"
+                    class="cn.bingoogolapple.idea.android.action.study.TestDialog"/>
+        </group>
+
+        <action id="cn.bingoogolapple.idea.android.BGAAndroidAction"
+                class="cn.bingoogolapple.idea.android.BGAAndroidAction"
+                icon="/icons/BGA.png"
+                project-type="Android"
+                text="BGAAndroid">
+            <add-to-group group-id="MainToolBar" anchor="last"/>
+            <add-to-group group-id="NavBarToolBar" anchor="first"/>
+        </action>
+
+    </actions>
+</idea-plugin>
